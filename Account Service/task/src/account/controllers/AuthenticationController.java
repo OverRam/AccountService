@@ -5,13 +5,15 @@ import account.RoleRepo;
 import account.service.UserDetailsServiceImpl;
 import account.user.User;
 import account.user.UserView;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.validation.Valid;
 
 
 @RestController
@@ -26,7 +28,7 @@ public class AuthenticationController {
 
 
     @PostMapping("/signup")
-    UserView signupToService(@Validated @RequestBody User userInfo) {
+    UserView signupToService(@Valid @RequestBody @NotNull User userInfo) {
         userInfo.setPassword(encoder.encode(userInfo.getPassword()));
         userInfo.addAuthority(new Role(RoleRepo.USER.getAuthority()));
         service.saveUser(userInfo);
