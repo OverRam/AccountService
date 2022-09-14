@@ -7,7 +7,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
-import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 import java.util.Collection;
@@ -27,22 +27,19 @@ public class User implements UserDetails {
     private String username;
 
     @Column
-    @NotEmpty
+    @NotBlank(message = "Name is empty")
     private String name;
 
     @Column
-    @NotEmpty
+    @NotBlank(message = "Lastname is empty")
     private String lastname;
 
     @Column
-    @NotEmpty
-    @Size(min = 12, message = "The password length must be at least 12 chars!")
+    @Size(message = "The password length must be at least 12 chars!", min = 12)
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
-    @NotEmpty
-
-
+    @NotBlank
     @Email(regexp = "[a-zA-Z0-9._%+-]+@acme.com")
     @Column(unique = true)
     private String email;
