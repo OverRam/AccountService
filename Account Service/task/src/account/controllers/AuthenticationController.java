@@ -5,7 +5,6 @@ import account.RoleRepo;
 import account.service.UserDetailsServiceImpl;
 import account.user.User;
 import account.user.UserView;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -28,7 +27,7 @@ public class AuthenticationController {
 
 
     @PostMapping("/signup")
-    UserView signupToService(@Valid @RequestBody @NotNull User userInfo) {
+    UserView signupToService(@Valid @RequestBody User userInfo) {
         userInfo.setPassword(encoder.encode(userInfo.getPassword()));
         userInfo.addAuthority(new Role(RoleRepo.USER.getAuthority()));
         service.saveUser(userInfo);
