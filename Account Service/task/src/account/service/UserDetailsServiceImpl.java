@@ -1,12 +1,15 @@
 package account.service;
 
+import account.HackedPassword;
 import account.dataBase.UserRepository;
+import account.errors.PasswordError;
 import account.errors.UserExistError;
 import account.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,6 +21,12 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Autowired
     UserRepository userRepo;
+
+    @Autowired
+    HackedPassword hackedPassword;
+
+    @Autowired
+    PasswordEncoder encoder;
 
     @Override
     public UserDetails loadUserByUsername(String username) {
@@ -40,6 +49,18 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         }
     }
 
+    public void changePassword(String newPassword, User u) {
+        if (encoder.matches(newPassword, u.getPassword())) {
+            throw new PasswordError("The passwords must be different!");
+        }
+        System.out.println("check encode");
+
+        String encodePassword = encoder.encode(newPassword);
+        checkIsHacked(encodePassword);
+        u.setPassword(encodePassword);
+
+        userRepo.save(u);
+    }
 
     public void saveUser(User u) {
         String email = u.getEmail();
@@ -54,5 +75,15 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     public List<User> findAllUsers() {
         return userRepo.findAll();
     }
+
+    public void checkIsHacked(String encodePassword) throws PasswordError {
+        boolean isHacked = hackedPassword.getPasswordList()
+                .stream().parallel().anyMatch(e -> encoder.matches(e, encodePassword));
+
+        if (isHacked) {
+            throw new PasswordError("The password is in the hacker's database!");
+        }
+    }
+
 
 }
