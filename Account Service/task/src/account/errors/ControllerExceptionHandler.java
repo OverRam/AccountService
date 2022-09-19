@@ -19,16 +19,14 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
     protected ResponseEntity<Object> handleMethodArgumentNotValid(
             MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
 
-
         StringBuilder sb = new StringBuilder();
-        ex.getBindingResult().getAllErrors().forEach(e -> sb.append(e.getDefaultMessage()).append("; "));
-        sb.replace(sb.length() - 3, sb.length() - 1, "");
+        //ex.getBindingResult().getAllErrors().forEach(e -> sb.append(e.getDefaultMessage()));
 
         Map<String, Object> body = new LinkedHashMap<>();
         body.put("timestamp", LocalDateTime.now());
         body.put("status", status.value());
         body.put("error", status.getReasonPhrase());
-        body.put("message", sb);
+        body.put("message", ex.getBindingResult().getAllErrors().get(0).getDefaultMessage());
         body.put("path", request.getDescription(false).replace("uri=", ""));
         return new ResponseEntity<>(body, headers, status);
     }
