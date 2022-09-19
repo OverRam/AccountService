@@ -56,7 +56,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         System.out.println("check encode");
 
         String encodePassword = encoder.encode(newPassword);
-        checkIsHacked(encodePassword);
+        checkPasswordIsHacked(encodePassword);
         u.setPassword(encodePassword);
 
         userRepo.save(u);
@@ -76,7 +76,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         return userRepo.findAll();
     }
 
-    public void checkIsHacked(String encodePassword) throws PasswordError {
+    public void checkPasswordIsHacked(String encodePassword) throws PasswordError {
         boolean isHacked = hackedPassword.getPasswordList()
                 .stream().parallel().anyMatch(e -> encoder.matches(e, encodePassword));
 
