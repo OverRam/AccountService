@@ -10,7 +10,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     Optional<User> findByEmailIgnoreCase(String email);
 
-
     @Override
     <S extends User> S save(S entity);
 }
