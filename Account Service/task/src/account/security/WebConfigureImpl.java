@@ -29,7 +29,7 @@ public class WebConfigureImpl extends WebSecurityConfigurerAdapter {
         http
                 .authorizeRequests() // manage access
                 .mvcMatchers("/api/auth/signup").permitAll()
-                .mvcMatchers("/api/auth/changepass").hasAnyAuthority(ADMIN.getAuthority(),
+                .mvcMatchers("/api/auth/changepass").hasAnyAuthority(USER.getAuthority(),
                         ACCOUNTANT.getAuthority(), ADMIN.getAuthority())
                 .mvcMatchers("/api/admin/**").hasAuthority(ADMIN.getAuthority())
                 .mvcMatchers("/api/empl/payment").hasAnyAuthority(ACCOUNTANT.getAuthority(),
