@@ -1,6 +1,5 @@
 package account.controllers;
 
-import account.HackedPassword;
 import account.Role;
 import account.RoleRepo;
 import account.errors.PasswordError;
@@ -19,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.LinkedHashMap;
@@ -39,6 +37,11 @@ public class AuthenticationController {
     @PostMapping("/signup")
     UserView signupToService(@Valid @RequestBody User userInfo) {
         userInfo.addAuthority(new Role(RoleRepo.USER.getAuthority()));
+
+        String encodePassword = encoder.encode(userInfo.getPassword());
+        service.checkPasswordIsHacked(encodePassword);
+        userInfo.setPassword(encodePassword);
+
         service.saveUser(userInfo);
 
         User user = (User) service.loadUserByEmail(userInfo.getEmail());
