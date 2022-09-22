@@ -1,8 +1,9 @@
-package account.security;
+package account.configuration;
 
-import account.errors.RestAuthenticationEntryPoint;
-
+import account.exception.RestAuthenticationEntryPoint;
+import account.model.Role;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -10,9 +11,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-
-import static account.RoleRepo.*;
 
 @Configuration
 @EnableWebSecurity
@@ -29,12 +29,11 @@ public class WebConfigureImpl extends WebSecurityConfigurerAdapter {
         http
                 .authorizeRequests() // manage access
                 .mvcMatchers("/api/auth/signup").permitAll()
-                .mvcMatchers("/api/auth/changepass").hasAnyAuthority(USER.getAuthority(),
-                        ACCOUNTANT.getAuthority(), ADMIN.getAuthority())
-                .mvcMatchers("/api/admin/**").hasAuthority(ADMIN.getAuthority())
-                .mvcMatchers("/api/empl/payment").hasAnyAuthority(ACCOUNTANT.getAuthority(),
-                        USER.getAuthority())
-                .mvcMatchers("/api/acct/**").hasAuthority(ACCOUNTANT.getAuthority())
+                .mvcMatchers("/api/auth/changepass").hasAnyAuthority(Role.ROLE_USER.toString(),
+                        Role.ROLE_ADMIN.toString())
+                .mvcMatchers("/api/admin/**").hasAuthority(Role.ROLE_ADMIN.toString())
+                .mvcMatchers("/api/empl/payment").hasAnyAuthority(Role.ROLE_USER.toString())
+                .mvcMatchers("/api/acct/**").hasAuthority(Role.ROLE_ADMIN.toString())
                 .anyRequest().permitAll() //register and others
                 .and()
                 .httpBasic()
@@ -50,6 +49,11 @@ public class WebConfigureImpl extends WebSecurityConfigurerAdapter {
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userDetailsService)
                 .passwordEncoder(passwordEncoder);
+    }
+
+    @Bean
+    public BCryptPasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder(13);
     }
 
 }

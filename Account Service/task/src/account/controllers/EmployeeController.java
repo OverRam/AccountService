@@ -1,26 +1,21 @@
 package account.controllers;
 
-import account.service.UserDetailsServiceImpl;
-import account.user.User;
-import account.user.UserView;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
+import account.model.DTO.UserViewResponseDTO;
+import account.model.User;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/empl")
+@RequiredArgsConstructor
 public class EmployeeController {
 
-    @Autowired
-    UserDetailsServiceImpl service;
-
     @GetMapping("/payment")
-    UserView getEmployeePayrolls(Authentication auth) {
-        System.out.println(auth.getName());
-        User u = (User) service.loadUserByUsername(auth.getName());
-
-        return new UserView(u);
+    public ResponseEntity<UserViewResponseDTO> payment(@AuthenticationPrincipal User user) {
+        return ResponseEntity.ok(new UserViewResponseDTO(user));
     }
 }
