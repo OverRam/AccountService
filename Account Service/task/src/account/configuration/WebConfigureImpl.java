@@ -29,11 +29,12 @@ public class WebConfigureImpl extends WebSecurityConfigurerAdapter {
         http
                 .authorizeRequests() // manage access
                 .mvcMatchers("/api/auth/signup").permitAll()
+                .mvcMatchers("/api/admin/**").permitAll()
+                .mvcMatchers("/api/empl/**").permitAll()
+                .mvcMatchers("/api/acct/**").permitAll()
                 .mvcMatchers("/api/auth/changepass").hasAnyAuthority(Role.ROLE_USER.toString(),
-                        Role.ROLE_ADMIN.toString())
-                .mvcMatchers("/api/admin/**").hasAuthority(Role.ROLE_ADMIN.toString())
-                .mvcMatchers("/api/empl/payment").hasAnyAuthority(Role.ROLE_USER.toString())
-                .mvcMatchers("/api/acct/**").hasAuthority(Role.ROLE_ADMIN.toString())
+                        Role.ROLE_ADMIN.toString()
+                )
                 .anyRequest().permitAll() //register and others
                 .and()
                 .httpBasic()
