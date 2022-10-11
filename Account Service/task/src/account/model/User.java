@@ -19,10 +19,6 @@ import java.util.Objects;
 @Table(name = "USER")
 public class User implements UserDetails {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
-
     private String username;
 
     private String name;
@@ -31,6 +27,7 @@ public class User implements UserDetails {
 
     private String password;
 
+    @Id
     @Column(columnDefinition = "varchar_ignorecase(255) NOT NULL UNIQUE")
     private String email;
 
@@ -100,10 +97,6 @@ public class User implements UserDetails {
         return enabled;
     }
 
-    public Long getId() {
-        return id;
-    }
-
     public String getLastname() {
         return lastname;
     }
@@ -117,7 +110,7 @@ public class User implements UserDetails {
         if (this == o) return true;
         if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
         User user = (User) o;
-        return id != null && Objects.equals(id, user.id);
+        return email != null && Objects.equals(email, user.email);
     }
 
     @Override
