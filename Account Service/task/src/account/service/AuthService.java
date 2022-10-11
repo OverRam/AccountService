@@ -18,11 +18,11 @@ import org.springframework.web.server.ResponseStatusException;
 @RequiredArgsConstructor
 public class AuthService {
 
-    private final UserRepository userRepository;
+    UserRepository userRepository;
 
-    private final BCryptPasswordEncoder passwordEncoder;
+    BCryptPasswordEncoder passwordEncoder;
 
-    private final PasswordBreachValidatorService passwordBreachValidator;
+    PasswordBreachValidatorService passwordBreachValidator;
 
     public UserViewResponseDTO signup(NewUserDTO newUser) {
         if (userRepository.findByEmail(newUser.getEmail()).isPresent()) {
