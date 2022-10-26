@@ -1,7 +1,6 @@
 package account.configuration;
 
 import account.exception.RestAuthenticationEntryPoint;
-import account.model.Role;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,6 +12,8 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+
+import static account.configuration.Role.*;
 
 @Configuration
 @EnableWebSecurity
@@ -31,9 +32,10 @@ public class WebConfigureImpl extends WebSecurityConfigurerAdapter {
                 .mvcMatchers("/api/auth/signup").permitAll()
                 .mvcMatchers("/api/admin/**").permitAll()
                 .mvcMatchers("/api/empl/**").permitAll()
+                .mvcMatchers("api/empl/payment").hasAuthority(ROLE_USER.toString())
                 .mvcMatchers("/api/acct/**").permitAll()
-                .mvcMatchers("/api/auth/changepass").hasAnyAuthority(Role.ROLE_USER.toString(),
-                        Role.ROLE_ADMIN.toString()
+                .mvcMatchers("/api/auth/changepass").hasAnyAuthority(ROLE_USER.toString(),
+                        ROLE_ADMIN.toString()
                 )
                 .anyRequest().permitAll() //register and others
                 .and()

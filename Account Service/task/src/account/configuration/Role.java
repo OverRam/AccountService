@@ -1,4 +1,4 @@
-package account.model;
+package account.configuration;
 
 public enum Role {
     ROLE_ADMIN,

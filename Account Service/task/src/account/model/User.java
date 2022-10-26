@@ -1,5 +1,6 @@
 package account.model;
 
+import account.configuration.Role;
 import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.Hibernate;
@@ -8,6 +9,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -16,8 +18,7 @@ import java.util.Objects;
 @Setter
 @ToString
 @Entity
-@Table(name = "USER")
-public class User implements UserDetails {
+public class User implements UserDetails, Serializable {
 
     private String username;
 
@@ -42,6 +43,14 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     @ElementCollection(fetch = FetchType.EAGER)
     private List<Role> roles;
+
+    @OneToMany(mappedBy = "userEmail",cascade = CascadeType.REMOVE)
+    @ToString.Exclude
+    private List<Payroll> payroll = new ArrayList<>();
+
+    public List<Payroll> getPayroll() {
+        return payroll;
+    }
 
     public User() {
         accountNonExpired = true;

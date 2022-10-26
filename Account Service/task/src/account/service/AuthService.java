@@ -6,9 +6,10 @@ import account.model.DTO.NewPasswordDTO;
 import account.model.DTO.NewUserDTO;
 import account.model.DTO.PasswordChangedResponseDTO;
 import account.model.DTO.UserViewResponseDTO;
-import account.model.Role;
+import account.configuration.Role;
 import account.model.User;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -18,10 +19,11 @@ import org.springframework.web.server.ResponseStatusException;
 @RequiredArgsConstructor
 public class AuthService {
 
+    @Autowired
     UserRepository userRepository;
-
+    @Autowired
     BCryptPasswordEncoder passwordEncoder;
-
+    @Autowired
     PasswordBreachValidatorService passwordBreachValidator;
 
     public UserViewResponseDTO signup(NewUserDTO newUser) {

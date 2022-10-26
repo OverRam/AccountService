@@ -1,4 +1,4 @@
-package account.model;
+package account.exception;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
