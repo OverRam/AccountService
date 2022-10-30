@@ -27,7 +27,7 @@ public class Payroll implements Serializable {
     private String period;
 
     @ManyToOne
-    @JoinColumn(name = "user_email", columnDefinition = "varchar_ignorecase(255) NOT NULL")
+    @JoinColumn(name = "user_email", columnDefinition = "varchar_ignorecase(255) NOT NULL UNIQUE")
     private User userEmail;
 
     @Override

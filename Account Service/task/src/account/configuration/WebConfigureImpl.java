@@ -13,7 +13,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import static account.configuration.Role.*;
+import static account.model.Role.*;
 
 @Configuration
 @EnableWebSecurity
@@ -30,14 +30,11 @@ public class WebConfigureImpl extends WebSecurityConfigurerAdapter {
         http
                 .authorizeRequests() // manage access
                 .mvcMatchers("/api/auth/signup").permitAll()
-                .mvcMatchers("/api/admin/**").permitAll()
-                .mvcMatchers("/api/empl/**").permitAll()
-                .mvcMatchers("api/empl/payment").hasAuthority(ROLE_USER.toString())
-                .mvcMatchers("/api/acct/**").permitAll()
-                .mvcMatchers("/api/auth/changepass").hasAnyAuthority(ROLE_USER.toString(),
-                        ROLE_ADMIN.toString()
-                )
-                .anyRequest().permitAll() //register and others
+                .mvcMatchers("/api/auth/changepass").hasAnyAuthority(ROLE_USER.name(), ROLE_ADMIN.name(),
+                        ROLE_ADMIN.name())
+                .mvcMatchers("/api/admin/**").hasAuthority(ROLE_ADMIN.name())
+                .mvcMatchers("api/empl/payment").hasAnyAuthority(ROLE_USER.name(), ROLE_ACCOUNTANT.name())
+                .mvcMatchers("/api/acct/**").hasAuthority(ROLE_ACCOUNTANT.name())
                 .and()
                 .httpBasic()
                 .authenticationEntryPoint(new RestAuthenticationEntryPoint()) // Handle auth error

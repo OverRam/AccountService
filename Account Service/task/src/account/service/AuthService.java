@@ -6,7 +6,7 @@ import account.model.DTO.NewPasswordDTO;
 import account.model.DTO.NewUserDTO;
 import account.model.DTO.PasswordChangedResponseDTO;
 import account.model.DTO.UserViewResponseDTO;
-import account.configuration.Role;
+import account.model.Role;
 import account.model.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +37,7 @@ public class AuthService {
         addedUser.setEmail(newUser.getEmail().toLowerCase());
         addedUser.setUsername(newUser.getEmail().toLowerCase());
         addedUser.setPassword(passwordEncoder.encode(newUser.getPassword()));
-        addedUser.grantAuthority(Role.ROLE_USER);
+        addedUser.grantAuthority(userRepository.count() == 0 ? Role.ROLE_ADMIN : Role.ROLE_USER);
         return new UserViewResponseDTO(userRepository.save(addedUser));
     }
 

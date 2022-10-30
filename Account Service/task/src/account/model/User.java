@@ -1,8 +1,6 @@
 package account.model;
 
-import account.configuration.Role;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import org.hibernate.Hibernate;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -15,10 +13,15 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
+@Getter
 @Setter
 @ToString
 @Entity
 public class User implements UserDetails, Serializable {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
 
     private String username;
 
@@ -28,7 +31,6 @@ public class User implements UserDetails, Serializable {
 
     private String password;
 
-    @Id
     @Column(columnDefinition = "varchar_ignorecase(255) NOT NULL UNIQUE")
     private String email;
 
@@ -44,13 +46,9 @@ public class User implements UserDetails, Serializable {
     @ElementCollection(fetch = FetchType.EAGER)
     private List<Role> roles;
 
-    @OneToMany(mappedBy = "userEmail",cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "userEmail", cascade = CascadeType.REMOVE)
     @ToString.Exclude
     private List<Payroll> payroll = new ArrayList<>();
-
-    public List<Payroll> getPayroll() {
-        return payroll;
-    }
 
     public User() {
         accountNonExpired = true;
@@ -119,7 +117,7 @@ public class User implements UserDetails, Serializable {
         if (this == o) return true;
         if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
         User user = (User) o;
-        return email != null && Objects.equals(email, user.email);
+        return id != null && Objects.equals(id, user.id);
     }
 
     @Override

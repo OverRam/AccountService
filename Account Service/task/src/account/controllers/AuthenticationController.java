@@ -1,5 +1,6 @@
 package account.controllers;
 
+import account.Repository.UserRepository;
 import account.model.DTO.NewPasswordDTO;
 import account.model.DTO.NewUserDTO;
 import account.model.DTO.PasswordChangedResponseDTO;
@@ -10,10 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
@@ -31,8 +29,8 @@ public class AuthenticationController {
         return ResponseEntity.ok(authService.signup(newUser));
     }
 
-    @PostMapping("/changepass")
-    public ResponseEntity<PasswordChangedResponseDTO> changepass(@AuthenticationPrincipal User currentUser,
+    @PostMapping("/changePass")
+    public ResponseEntity<PasswordChangedResponseDTO> changePass(@AuthenticationPrincipal User currentUser,
                                                                  @Valid @RequestBody NewPasswordDTO newPassword) {
         return ResponseEntity.ok(authService.changePass(currentUser, newPassword));
     }
