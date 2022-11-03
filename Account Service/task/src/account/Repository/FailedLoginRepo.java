@@ -1,12 +1,12 @@
 package account.Repository;
 
-import account.model.User;
+import account.model.FailedLogin;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
 @Repository
-public interface UserRepository extends JpaRepository<User, Long> {
-    Optional<User> findByEmail(String email);
+public interface FailedLoginRepo extends JpaRepository<FailedLogin, Long> {
+    Optional<FailedLogin> findByUserId(Long userId);
 }

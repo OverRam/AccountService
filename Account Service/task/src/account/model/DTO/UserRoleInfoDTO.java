@@ -14,4 +14,13 @@ public class UserRoleInfoDTO {
     private String role;
     @NotBlank(message = "Cant be empty")
     private String operation;
+
+    public static UserRoleInfoDTO getNewInstance(UserRoleInfoDTO dto) {
+        UserRoleInfoDTO u = new UserRoleInfoDTO();
+        u.setRole(dto.getRole());
+        u.setEmail(dto.getEmail());
+        u.setOperation(dto.getOperation());
+        return u;
+    }
+
 }

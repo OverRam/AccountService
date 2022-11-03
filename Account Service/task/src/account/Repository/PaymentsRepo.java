@@ -15,14 +15,14 @@ public interface PaymentsRepo extends JpaRepository<Payroll, String> {
     @Modifying(clearAutomatically = true)
     @Query(value = "update Payroll p SET p.salary = ?1 " +
             "WHERE " +
-            "p.user_email = ?2 " +
+            "p.user_id = ?2 " +
             "AND " +
             "p.period = ?3", nativeQuery = true)
-    int updatePaymentUserByPeriodAndEmail(Long salaryNewValue, String userEmail, String paymentPeriod);
+    void updatePaymentUserByPeriodAndUserId(Long salaryNewValue, Long id, String paymentPeriod);
 
-    @Query(value = "select * from Payroll where user_email = ?1 and period =?2", nativeQuery = true)
-    Optional<Payroll> findByEmailAndPeriod(String email, String period);
+    @Query(value = "select * from Payroll where user_id = ?1 and period =?2", nativeQuery = true)
+    Optional<Payroll> findByUserIdAndPeriod(Long id, String period);
 
-    @Query(value = "select * from Payroll where user_email = ?1", nativeQuery = true)
-    Optional<List<Payroll>> findByEmail(String email);
+    @Query(value = "select * from Payroll where user_id = ?1", nativeQuery = true)
+    Optional<List<Payroll>> findByUserId(Long id);
 }

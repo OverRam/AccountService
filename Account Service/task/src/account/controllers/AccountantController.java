@@ -14,14 +14,16 @@ import java.util.List;
 
 @RestController
 @Validated
-@RequestMapping("/api/acct")
+@RequestMapping("/api/acct/")
 public class AccountantController {
 
     @Autowired
     private PaymentService paymentService;
 
-    @PostMapping("/payments")
-    ResponseEntity<LinkedHashMap<String, String>> uploadsPayrolls(@RequestBody @Valid List<@Valid PaymentDto> paymentsList) {
+    @PostMapping("payments")
+    public ResponseEntity<LinkedHashMap<String, String>> uploadsPayrolls(
+            @RequestBody @Valid List<@Valid PaymentDto> paymentsList) {
+
         paymentService.addListPayrolls(paymentsList);
 
         LinkedHashMap<String, String> lhm = new LinkedHashMap<>();
@@ -29,8 +31,8 @@ public class AccountantController {
         return new ResponseEntity<>(lhm, HttpStatus.OK);
     }
 
-    @PutMapping("/payments")
-    ResponseEntity<LinkedHashMap<String, String>> changeSalaryUser(@RequestBody @Valid PaymentDto payroll) {
+    @PutMapping("payments")
+    public ResponseEntity<LinkedHashMap<String, String>> changeSalaryUser(@RequestBody @Valid PaymentDto payroll) {
         paymentService.updatePayroll(payroll);
 
         LinkedHashMap<String, String> lhm = new LinkedHashMap<>();

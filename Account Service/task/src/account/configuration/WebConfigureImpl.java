@@ -12,6 +12,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.access.AccessDeniedHandler;
 
 import static account.model.Role.*;
 
@@ -30,19 +31,21 @@ public class WebConfigureImpl extends WebSecurityConfigurerAdapter {
         http
                 .authorizeRequests() // manage access
                 .mvcMatchers("/api/auth/signup").permitAll()
-                .mvcMatchers("/api/auth/changepass").hasAnyAuthority(ROLE_USER.name(), ROLE_ADMIN.name(),
-                        ROLE_ADMIN.name())
+                .mvcMatchers("/api/auth/changepass").hasAnyAuthority(ROLE_USER.name(), ROLE_ACCOUNTANT.name(),
+                        ROLE_ADMIN.name(), ROLE_AUDITOR.name())
                 .mvcMatchers("/api/admin/**").hasAuthority(ROLE_ADMIN.name())
                 .mvcMatchers("api/empl/payment").hasAnyAuthority(ROLE_USER.name(), ROLE_ACCOUNTANT.name())
                 .mvcMatchers("/api/acct/**").hasAuthority(ROLE_ACCOUNTANT.name())
+                .mvcMatchers("/api/security/**").hasAuthority(ROLE_ACCOUNTANT.name())
+                .and()
+                .exceptionHandling().accessDeniedHandler(accessDeniedHandler())
                 .and()
                 .httpBasic()
                 .authenticationEntryPoint(new RestAuthenticationEntryPoint()) // Handle auth error
                 .and()
                 .csrf().disable().headers().frameOptions().disable() // for Postman, the H2 console
                 .and()
-                .sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS); // no session
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS); // no session
     }
 
     @Override
@@ -54,6 +57,11 @@ public class WebConfigureImpl extends WebSecurityConfigurerAdapter {
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder(13);
+    }
+
+    @Bean
+    public AccessDeniedHandler accessDeniedHandler() {
+        return new CustomAccessDeniedHandler();
     }
 
 }

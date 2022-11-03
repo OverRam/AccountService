@@ -27,9 +27,8 @@ public class AuthService {
     PasswordBreachValidatorService passwordBreachValidator;
 
     public UserViewResponseDTO signup(NewUserDTO newUser) {
-        if (userRepository.findByEmail(newUser.getEmail()).isPresent()) {
+        if (userRepository.findByEmail(newUser.getEmail()).isPresent())
             throw new UserExistException("User exist!");
-        }
         passwordBreachValidator.validate(newUser.getPassword());
         User addedUser = new User();
         addedUser.setName(newUser.getName());
